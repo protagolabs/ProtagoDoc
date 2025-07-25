@@ -30,10 +30,12 @@ cd tools/mineru
 # Install MinerU and dependencies
 pip install -e .[full]
 
+# Return to project root for model download
+cd ../..
+
 # Download required model weights (first time setup)
 pip install huggingface_hub
-wget https://raw.githubusercontent.com/protagolabs/MinerU_Protago/refs/heads/dev_tables/download_models_hf.py -O download_models_hf.py
-python download_models_hf.py
+python scripts/download_models_hf.py
 
 # Use MinerU (note: command is magic-pdf, not mineru in v1.3.10)
 magic-pdf -p <input_path> -o <output_path>
@@ -71,6 +73,48 @@ magic-pdf -p demo/pdfs/small_ocr.pdf -o output/
 ```
 
 ## 📦 Getting Started
+
+### 🚀 Complete Fresh Setup (From Scratch)
+
+Here's the complete process to reproduce the magic-pdf setup:
+
+**1. Clone Repository with Submodules:**
+```bash
+git clone --recursive https://github.com/protagolabs/ProtagoDoc.git
+cd ProtagoDoc
+```
+
+**2. Set up Conda Environment:**
+```bash
+source /opt/conda/etc/profile.d/conda.sh && conda activate pd
+# or create new environment: conda create -n pd python=3.10 && conda activate pd
+```
+
+**3. Install MinerU:**
+```bash
+cd tools/mineru
+pip install -e .[full]
+cd ../..
+```
+
+**4. Download Models and Configure GPU:**
+```bash
+pip install huggingface_hub
+python scripts/download_models_hf.py
+```
+
+**5. Verify Setup:**
+```bash
+python scripts/test_fresh_setup.py
+```
+
+**6. Test Magic-PDF:**
+```bash
+cd tools/mineru
+magic-pdf -p demo/pdfs/small_ocr.pdf -o ../../output/
+```
+
+Expected result: **~130+ it/s GPU processing speed** 🔥
 
 ### Clone with Submodules
 
@@ -128,6 +172,9 @@ git commit -m "Update <tool-name> submodule"
 ProtagoDoc/
 ├── tools/                  # All tool submodules
 │   └── mineru/            # MinerU - PDF to Markdown/JSON converter
+├── scripts/               # Utility scripts
+│   ├── download_models_hf.py  # Model download script (local)
+│   └── test_fresh_setup.py    # Setup validation script
 ├── configs/               # Configuration templates
 │   ├── magic-pdf-gpu.template.json  # GPU configuration template
 │   └── README.md          # Configuration documentation
@@ -167,7 +214,7 @@ git commit -m "Reset MinerU to pinned version 1.3.10 (magic_pdf-1.3.11-released 
 ### GPU Configuration Issues
 
 **Error: `magic-pdf: command not found`**
-- Ensure you've run the model download script: `python download_models_hf.py`
+- Ensure you've run the model download script: `python scripts/download_models_hf.py`
 - Check if MinerU is properly installed: `pip show magic-pdf`
 
 **Error: Still using CPU despite CUDA configuration**
@@ -186,8 +233,7 @@ git commit -m "Reset MinerU to pinned version 1.3.10 (magic_pdf-1.3.11-released 
 **Error: Missing model weights**
 ```bash
 # Re-download models if they're missing
-cd tools/mineru
-python download_models_hf.py
+python scripts/download_models_hf.py
 ```
 
 **GPU Memory Issues**
