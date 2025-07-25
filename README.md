@@ -9,7 +9,7 @@ This repository serves as a centralized hub for various development and producti
 ### Document Processing
 
 #### [MinerU](https://github.com/opendatalab/MinerU)
-**Location:** `tools/mineru`
+**Location:** `tools/mineru` | **Version:** 1.3.10
 
 A high-quality tool for converting PDF to Markdown and JSON format. MinerU is a comprehensive solution for precise document content extraction with support for:
 
