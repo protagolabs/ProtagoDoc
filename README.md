@@ -30,9 +30,40 @@ cd tools/mineru
 # Install MinerU and dependencies
 pip install -e .[full]
 
+# Download required model weights (first time setup)
+pip install huggingface_hub
+wget https://raw.githubusercontent.com/protagolabs/MinerU_Protago/refs/heads/dev_tables/download_models_hf.py -O download_models_hf.py
+python download_models_hf.py
+
 # Use MinerU (note: command is magic-pdf, not mineru in v1.3.10)
 magic-pdf -p <input_path> -o <output_path>
 ```
+
+### 🚀 GPU Acceleration Setup
+
+For optimal performance with CUDA GPU acceleration:
+
+**1. Verify GPU Support:**
+```bash
+nvidia-smi  # Check GPU availability
+python -c "import torch; print(f'CUDA available: {torch.cuda.is_available()}')"
+```
+
+**2. Configure GPU Acceleration:**
+The model download script automatically creates a configuration file at `~/magic-pdf.json`. To enable GPU acceleration, ensure the device mode is set to `cuda`:
+
+```json
+{
+    "device-mode": "cuda",
+    "models-dir": "/path/to/downloaded/models"
+}
+```
+
+> **📋 Configuration Template**: See [`configs/magic-pdf-gpu.template.json`](configs/magic-pdf-gpu.template.json) for a complete configuration template with all available options.
+
+**3. Performance Comparison:**
+- **CPU Mode**: ~16-17 it/s processing speed, language switched to `ch_lite`
+- **GPU Mode**: ~130+ it/s processing speed (**8x faster**), full language support
 
 **Example Usage:**
 ```bash
@@ -97,6 +128,9 @@ git commit -m "Update <tool-name> submodule"
 ProtagoDoc/
 ├── tools/                  # All tool submodules
 │   └── mineru/            # MinerU - PDF to Markdown/JSON converter
+├── configs/               # Configuration templates
+│   ├── magic-pdf-gpu.template.json  # GPU configuration template
+│   └── README.md          # Configuration documentation
 ├── .gitmodules            # Submodule configuration
 └── README.md              # This file
 ```
@@ -129,6 +163,42 @@ cd ../..
 git add tools/mineru
 git commit -m "Reset MinerU to pinned version 1.3.10 (magic_pdf-1.3.11-released tag)"
 ```
+
+### GPU Configuration Issues
+
+**Error: `magic-pdf: command not found`**
+- Ensure you've run the model download script: `python download_models_hf.py`
+- Check if MinerU is properly installed: `pip show magic-pdf`
+
+**Error: Still using CPU despite CUDA configuration**
+1. Verify the configuration file exists: `ls -la ~/magic-pdf.json`
+2. Check device mode setting:
+   ```bash
+   python -c "from magic_pdf.libs.config_reader import get_device; print('Device:', get_device())"
+   ```
+3. Ensure device-mode is set to "cuda" in `~/magic-pdf.json`:
+   ```json
+   {
+       "device-mode": "cuda"
+   }
+   ```
+
+**Error: Missing model weights**
+```bash
+# Re-download models if they're missing
+cd tools/mineru
+python download_models_hf.py
+```
+
+**GPU Memory Issues**
+- Reduce batch size by modifying the configuration
+- Check available GPU memory: `nvidia-smi`
+- For GPUs with <6GB VRAM, consider using CPU mode
+
+**Performance Optimization**
+- **Expected GPU Performance**: 130+ it/s for OCR processing
+- **Expected CPU Performance**: 16-17 it/s for OCR processing
+- If GPU performance is poor, check CUDA installation and drivers
 
 ## 🤝 Contributing
 
