@@ -21,20 +21,17 @@ A high-quality tool for converting PDF to Markdown and JSON format. MinerU is a 
 
 **Quick Start:**
 ```bash
-# Activate conda environment
+# Create and activate conda environment
+conda create --name pd python=3.13 -y
 source /opt/conda/etc/profile.d/conda.sh && conda activate pd
 
-# Navigate to MinerU directory
+# Navigate to MinerU directory and install dependencies
 cd tools/mineru
-
-# Install MinerU and dependencies
 pip install -e .[full]
-
-# Return to project root for model download
 cd ../..
 
-# Download required model weights (first time setup)
-pip install huggingface_hub
+# Install required dependencies and download models
+pip install requests huggingface_hub
 python scripts/download_models_hf.py
 
 # Use MinerU (note: command is magic-pdf, not mineru in v1.3.10)
@@ -65,7 +62,7 @@ The model download script automatically creates a configuration file at `~/magic
 
 **3. Performance Comparison:**
 - **CPU Mode**: ~16-17 it/s processing speed, language switched to `ch_lite`
-- **GPU Mode**: ~130+ it/s processing speed (**8x faster**), full language support
+- **GPU Mode**: ~134+ it/s processing speed (**8x faster**), full language support
 
 **Example Usage:**
 ```bash
@@ -86,8 +83,9 @@ cd ProtagoDoc
 
 **2. Set up Conda Environment:**
 ```bash
+# Ensure conda is available and activate environment
 source /opt/conda/etc/profile.d/conda.sh && conda activate pd
-# or create new environment: conda create -n pd python=3.10 && conda activate pd
+# or create new environment: conda create -n pd python=3.13 && conda activate pd
 ```
 
 **3. Install MinerU:**
@@ -99,7 +97,8 @@ cd ../..
 
 **4. Download Models and Configure GPU:**
 ```bash
-pip install huggingface_hub
+# Install required dependencies first
+pip install requests huggingface_hub
 python scripts/download_models_hf.py
 ```
 
@@ -110,11 +109,11 @@ python scripts/test_fresh_setup.py
 
 **6. Test Magic-PDF:**
 ```bash
-cd tools/mineru
-magic-pdf -p demo/pdfs/small_ocr.pdf -o ../../output/
+mkdir -p output
+magic-pdf -p tools/mineru/demo/pdfs/small_ocr.pdf -o output/
 ```
 
-Expected result: **~130+ it/s GPU processing speed** 🔥
+Expected result: **~134+ it/s GPU processing speed** 🔥
 
 ### Clone with Submodules
 
@@ -184,6 +183,19 @@ ProtagoDoc/
 
 ## 🔧 Troubleshooting
 
+### ⚠️ Critical Setup Requirements
+
+**Always run in the correct conda environment:**
+```bash
+# ALWAYS activate the environment first
+source /opt/conda/etc/profile.d/conda.sh && conda activate pd
+
+# Verify you're in the right environment (should show "pd")
+echo $CONDA_DEFAULT_ENV
+
+# If not in pd environment, installations will fail or go to wrong location
+```
+
 ### Submodule Update Issues
 
 **Error: `fatal: couldn't find remote ref main`**
@@ -214,8 +226,10 @@ git commit -m "Reset MinerU to pinned version 1.3.10 (magic_pdf-1.3.11-released 
 ### GPU Configuration Issues
 
 **Error: `magic-pdf: command not found`**
+- **CRITICAL**: Ensure you're in the correct conda environment: `conda activate pd`
 - Ensure you've run the model download script: `python scripts/download_models_hf.py`
 - Check if MinerU is properly installed: `pip show magic-pdf`
+- Verify environment activation: `echo $CONDA_DEFAULT_ENV` should show `pd`
 
 **Error: Still using CPU despite CUDA configuration**
 1. Verify the configuration file exists: `ls -la ~/magic-pdf.json`
@@ -261,4 +275,4 @@ This repository serves as a collection hub. Each tool maintains its own license:
 
 ---
 
-*Last updated: $(date +'%Y-%m-%d')*
+*Last updated: 2025-07-25 - Fresh setup validated with 4x RTX 4090 GPUs achieving 134+ it/s performance*
