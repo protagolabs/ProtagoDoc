@@ -28,7 +28,7 @@ source /opt/conda/etc/profile.d/conda.sh && conda activate pd
 cd tools/mineru
 
 # Install MinerU and dependencies
-pip install -e .
+pip install -e .[full]
 pip install opencv-python openai ultralytics doclayout_yolo rapid_table ftfy
 
 # Use MinerU (note: command is magic-pdf, not mineru in v1.3.10)
@@ -47,7 +47,7 @@ magic-pdf -p demo/pdfs/small_ocr.pdf -o output/
 To clone this repository with all submodules:
 
 ```bash
-git clone --recursive https://github.com/your-username/ProtagoDoc.git
+git clone --recursive https://github.com/protagolabs/ProtagoDoc.git
 ```
 
 If you've already cloned the repository, initialize and update submodules:
@@ -77,8 +77,16 @@ git submodule update --remote
 To update a specific submodule:
 
 ```bash
+# For MinerU (uses master branch)
+cd tools/mineru
+git pull origin master
+cd ../..
+git add tools/mineru
+git commit -m "Update MinerU submodule"
+
+# For other tools that might use main branch
 cd tools/<tool-name>
-git pull origin main
+git pull origin main  # or master, depending on the repository
 cd ../..
 git add tools/<tool-name>
 git commit -m "Update <tool-name> submodule"
@@ -92,6 +100,35 @@ ProtagoDoc/
 │   └── mineru/            # MinerU - PDF to Markdown/JSON converter
 ├── .gitmodules            # Submodule configuration
 └── README.md              # This file
+```
+
+## 🔧 Troubleshooting
+
+### Submodule Update Issues
+
+**Error: `fatal: couldn't find remote ref main`**
+- Some repositories use `master` as the default branch instead of `main`
+- For MinerU: use `git pull origin master`
+- Check the default branch with: `git branch -r`
+
+**Updating from a specific version:**
+```bash
+# To update MinerU to a newer version tag
+cd tools/mineru
+git fetch origin
+git checkout magic_pdf-1.3.11-released  # or desired version
+cd ../..
+git add tools/mineru
+git commit -m "Update MinerU to version 1.3.11"
+```
+
+**Reset submodule to specific commit:**
+```bash
+cd tools/mineru
+git checkout 88026879343d7712f9f1729df6c110e3ee5d4333  # current pinned commit
+cd ../..
+git add tools/mineru
+git commit -m "Reset MinerU to pinned version 1.3.10"
 ```
 
 ## 🤝 Contributing
