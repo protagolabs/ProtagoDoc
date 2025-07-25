@@ -9,7 +9,7 @@ This repository serves as a centralized hub for various development and producti
 ### Document Processing
 
 #### [MinerU](https://github.com/opendatalab/MinerU)
-**Location:** `tools/mineru` | **Version:** 1.3.10
+**Location:** `tools/mineru` | **Version:** 1.3.10 (magic_pdf-1.3.11-released tag)
 
 A high-quality tool for converting PDF to Markdown and JSON format. MinerU is a comprehensive solution for precise document content extraction with support for:
 
@@ -29,7 +29,6 @@ cd tools/mineru
 
 # Install MinerU and dependencies
 pip install -e .[full]
-pip install opencv-python openai ultralytics doclayout_yolo rapid_table ftfy
 
 # Use MinerU (note: command is magic-pdf, not mineru in v1.3.10)
 magic-pdf -p <input_path> -o <output_path>
@@ -119,16 +118,16 @@ git fetch origin
 git checkout magic_pdf-1.3.11-released  # or desired version
 cd ../..
 git add tools/mineru
-git commit -m "Update MinerU to version 1.3.11"
+git commit -m "Update MinerU to version 1.3.10 (magic_pdf-1.3.11-released tag)"
 ```
 
 **Reset submodule to specific commit:**
 ```bash
 cd tools/mineru
-git checkout 88026879343d7712f9f1729df6c110e3ee5d4333  # current pinned commit
+git checkout ea619281ef43577da91247a9df60f53b12d47cbc  # current pinned commit (magic_pdf-1.3.11-released)
 cd ../..
 git add tools/mineru
-git commit -m "Reset MinerU to pinned version 1.3.10"
+git commit -m "Reset MinerU to pinned version 1.3.10 (magic_pdf-1.3.11-released tag)"
 ```
 
 ## 🤝 Contributing
