@@ -21,9 +21,23 @@ A high-quality tool for converting PDF to Markdown and JSON format. MinerU is a 
 
 **Quick Start:**
 ```bash
+# Activate conda environment
+source /opt/conda/etc/profile.d/conda.sh && conda activate pd
+
+# Navigate to MinerU directory
 cd tools/mineru
-pip install -e .[core]
-mineru -p <input_path> -o <output_path>
+
+# Install MinerU and dependencies
+pip install -e .
+pip install opencv-python openai ultralytics doclayout_yolo rapid_table ftfy
+
+# Use MinerU (note: command is magic-pdf, not mineru in v1.3.10)
+magic-pdf -p <input_path> -o <output_path>
+```
+
+**Example Usage:**
+```bash
+magic-pdf -p demo/pdfs/small_ocr.pdf -o output/
 ```
 
 ## 📦 Getting Started
