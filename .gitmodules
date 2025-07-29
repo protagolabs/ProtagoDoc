@@ -1,3 +1,6 @@
 [submodule "tools/mineru"]
 	path = tools/mineru
 	url = https://github.com/opendatalab/MinerU.git
+[submodule "tools/OmniCaptioner"]
+	path = tools/OmniCaptioner
+	url = https://github.com/Alpha-Innovator/OmniCaptioner.git
